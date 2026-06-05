@@ -1,9 +1,16 @@
+name: gws-mcp
 services:
   gws_mcp:
     build: .
     container_name: gws_mcp
+    hostname: gws-mcp
+    labels:
+      icon: https://www.gstatic.com/images/branding/product/2x/googleg_48dp.png
     ports:
-      - "8000:8000"
+      - mode: ingress
+        target: 8000
+        published: "8009"
+        protocol: tcp
     environment:
       - GOOGLE_MCP_CREDENTIALS_DIR=/app/store_creds
     volumes:
@@ -11,6 +18,25 @@ services:
       - store_creds:/app/store_creds:rw
     env_file:
       - .env
+    restart: unless-stopped
+    networks:
+      default: null
 
 volumes:
   store_creds:
+
+networks:
+  default:
+    name: gws-mcp_default
+
+x-casaos:
+  author: self
+  category: self
+  hostname: ""
+  icon: https://www.gstatic.com/images/branding/product/2x/googleg_48dp.png
+  index: /
+  is_uncontrolled: false
+  port_map: "8009"
+  scheme: http
+  title:
+    custom: Google Workspace MCP
